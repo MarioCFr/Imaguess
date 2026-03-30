@@ -24,7 +24,13 @@ Route::get('/game/guest', function () {
 
 // Ranking (público)
 Route::get('/ranking', function () {
-    return view('ranking');
+    $topScores = \App\Models\Score::with('user')
+        ->orderByDesc('points')
+        ->get()
+        ->unique('user_id')
+        ->values();
+
+    return view('ranking', compact('topScores'));
 })->name('ranking');
 
 // Perfil
