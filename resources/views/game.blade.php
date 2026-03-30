@@ -382,11 +382,12 @@
                     img.src = data.image_url;
                     img.classList.remove('img-loading');
                     document.getElementById('img-id').textContent = 'IMG:' + String(imgCount).padStart(3, '0');
-                    document.getElementById('hint-display').innerHTML =
-                        '&gt; ESPERANDO ENTRADA<span style="animation:blink 1s step-end infinite;display:inline-block;">_</span>';
                     img.dataset.hint1 = data.hint1;
                     img.dataset.hint2 = data.hint2;
                     hintsUsed = 0;
+                    activeHint1 = null;
+                    activeHint2 = null;
+                    renderHints();
                 })
                 .catch(() => {
                     document.getElementById('hint-display').textContent = '> ERROR DE CONEXIÓN';
@@ -426,22 +427,42 @@
             setTimeout(() => overlay.classList.remove('show'), 700);
         }
 
+        let activeHint1 = null;
+        let activeHint2 = null;
+
+        function renderHints() {
+            const hintDisplay = document.getElementById('hint-display');
+            let html = '';
+            if (activeHint1) html += '&gt; PISTA 1: <span style="color:var(--green);letter-spacing:4px;">' + activeHint1 + '</span>';
+            if (activeHint2) {
+                if (html) html += '<br>';
+                html += '&gt; PISTA 2: <span style="color:var(--green);">' + activeHint2 + '</span>';
+            }
+            if (!html) html = '&gt; ESPERANDO ENTRADA<span style="animation:blink 1s step-end infinite;display:inline-block;">_</span>';
+            hintDisplay.innerHTML = html;
+        }
+
         function useHint(hintNum) {
             if (hintsUsed >= 2 || currentAnswers.length === 0) return;
             hintsUsed++;
             document.getElementById('hints-used').textContent = hintsUsed;
-            const img         = document.getElementById('game-image');
-            const hintDisplay = document.getElementById('hint-display');
+            const img = document.getElementById('game-image');
 
             if (hintNum === 1) {
-                hintDisplay.innerHTML = '&gt; PISTA 1: <span style="color:var(--green);letter-spacing:6px;">'
-                    + (img.dataset.hint1 || '_ _ _').toUpperCase() + '</span>';
+                const word = currentAnswers[0] || '';
+                let hint;
+                if (word.length <= 2) {
+                    hint = word[0].toUpperCase() + ' _';
+                } else {
+                    hint = word[0].toUpperCase() + ' ' + '_ '.repeat(word.length - 2) + word[word.length - 1].toUpperCase();
+                }
+                activeHint1 = hint;
                 document.getElementById('hint1-btn').disabled = true;
             } else {
-                hintDisplay.innerHTML = '&gt; PISTA 2: <span style="color:var(--green);">'
-                    + (img.dataset.hint2 || 'SIN PISTA') + '</span>';
+                activeHint2 = img.dataset.hint2 || 'SIN PISTA';
                 document.getElementById('hint2-btn').disabled = true;
             }
+            renderHints();
         }
 
         function endGame() {
