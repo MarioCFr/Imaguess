@@ -49,25 +49,73 @@
         }
         @keyframes scanline { 0%{top:-4px;} 100%{top:100vh;} }
 
-        /* Navbar */
+                /* Navbar */
         .navbar {
-            position: fixed; top:0; left:0; right:0; z-index:50;
-            background: rgba(0,0,0,0.9);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 150;
             border-bottom: 1px solid rgba(0,255,65,0.2);
+            box-shadow: 0 0 20px rgba(0,255,65,0.06), inset 0 0 20px rgba(0,255,65,0.01);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(4px);
             padding: 12px 32px;
-            display: flex; align-items:center; justify-content:space-between;
+            display: flex; align-items: center; justify-content: space-between;
         }
-        .nav-logo { font-family:'VT323',monospace; font-size:1.8rem; color:var(--green); text-shadow:0 0 10px var(--green); }
-        .nav-link {
-            color: var(--green-dim);
-            text-decoration: none;
-            font-size: 0.75rem;
+        .nav-logo {
+            font-family: 'VT323', monospace;
+            font-size: 1.8rem;
+            color: var(--green);
+            text-shadow: 0 0 10px var(--green);
             letter-spacing: 2px;
-            transition: color 0.2s;
-            padding: 4px 8px;
-            border: 1px solid transparent;
         }
-        .nav-link:hover { color:var(--green); border-color:rgba(0,255,65,0.3); }
+        .nav-status {
+            display: flex; align-items: center; gap: 16px;
+            font-size: 0.7rem; color: var(--green-dim);
+        }
+        .status-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .profile-btn {
+            width: 38px; height: 38px;
+            border: 1px solid var(--green-dim);
+            border-radius: 2px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            position: relative;
+        }
+        .profile-btn:hover {
+            border-color: var(--green);
+            box-shadow: 0 0 12px var(--green-glow);
+        }
+        .profile-dropdown {
+            position: absolute; top: calc(100% + 8px); right: 0;
+            background: rgba(0,10,2,0.97);
+            border: 1px solid var(--green-dim);
+            box-shadow: 0 0 20px var(--green-glow);
+            min-width: 180px;
+            display: none;
+            z-index: 200;
+        }
+        .profile-dropdown.open { display: block; }
+        .dropdown-item {
+            padding: 10px 16px;
+            font-size: 0.75rem;
+            color: var(--green-dim);
+            cursor: pointer;
+            transition: all 0.15s;
+            border-bottom: 1px solid rgba(0,255,65,0.1);
+            display: block; text-decoration: none;
+            letter-spacing: 1px;
+            background: transparent;
+            border-left: none; border-right: none; border-top: none;
+            width: 100%; text-align: left;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        .dropdown-item:last-child { border-bottom: none; }
+        .dropdown-item:hover { color: var(--green); background: rgba(0,255,65,0.05); }
 
         /* Terminal box */
         .terminal-box {
@@ -198,37 +246,35 @@
     <div class="scanline-move"></div>
     <canvas id="matrix-canvas"></canvas>
 
-    <!-- Navbar -->
+        <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-logo flicker">IMAGUESS</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-            @auth
-            <div style="position:relative;">
-                <button onclick="toggleDropdown()" style="width:38px;height:38px;border:1px solid var(--green-dim);border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;transition:all 0.2s;"
-                        onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--green-dim)'">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00b32c" stroke-width="1.5">
-                        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-                    </svg>
-                </button>
-                <div id="dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:rgba(0,10,2,0.97);border:1px solid var(--green-dim);min-width:180px;z-index:200;">
-                    <div style="padding:10px 16px;font-size:0.65rem;color:#1a5c29;letter-spacing:2px;border-bottom:1px solid rgba(0,255,65,0.15);">
-                        ROOT@IMAGUESS<span style="animation:blink 1s step-end infinite;display:inline-block;">_</span>
-                    </div>
-                    <a href="{{ route('profile') }}" style="padding:10px 16px;font-size:0.75rem;color:var(--green-dim);display:block;text-decoration:none;letter-spacing:1px;border-bottom:1px solid rgba(0,255,65,0.1);transition:all 0.15s;"
-                       onmouseover="this.style.color='var(--green)';this.style.background='rgba(0,255,65,0.05)'"
-                       onmouseout="this.style.color='var(--green-dim)';this.style.background='transparent'">&gt; MI PERFIL</a>
-                    <a href="{{ route('dashboard') }}" style="padding:10px 16px;font-size:0.75rem;color:var(--green-dim);display:block;text-decoration:none;letter-spacing:1px;border-bottom:1px solid rgba(0,255,65,0.1);transition:all 0.15s;"
-                       onmouseover="this.style.color='var(--green)';this.style.background='rgba(0,255,65,0.05)'"
-                       onmouseout="this.style.color='var(--green-dim)';this.style.background='transparent'">&gt; DASHBOARD</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" style="width:100%;text-align:left;padding:10px 16px;font-size:0.75rem;color:var(--green-dim);background:transparent;border:none;cursor:pointer;letter-spacing:1px;font-family:'Share Tech Mono',monospace;transition:all 0.15s;"
-                                onmouseover="this.style.color='var(--green)';this.style.background='rgba(0,255,65,0.05)'"
-                                onmouseout="this.style.color='var(--green-dim)';this.style.background='transparent'">&gt; CERRAR SESIÓN</button>
-                    </form>
+        <div class="nav-status">
+            <div class="status-dot"></div>
+            <span>SISTEMA ACTIVO</span>
+            <span style="color:#1a5c29;">|</span>
+            <span>SESIÓN: <span style="color:var(--green);">{{ auth()->user()->name ?? 'INVITADO' }}</span></span>
+        </div>
+        <div style="position:relative;">
+            <button class="profile-btn" onclick="toggleDropdown()" title="Perfil">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00b32c" stroke-width="1.5">
+                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+            </button>
+            <div class="profile-dropdown" id="dropdown">
+                <div style="padding:10px 16px; font-size:0.65rem; color:#1a5c29; letter-spacing:2px; border-bottom:1px solid rgba(0,255,65,0.15);">
+                    ROOT@IMAGUESS<span class="blink">_</span>
                 </div>
+                <a href="{{ route('dashboard') }}" class="dropdown-item">&gt; DASHBOARD</a>
+                <a href="{{ route('profile') }}" class="dropdown-item">&gt; MI PERFIL</a>
+                <a href="{{ route('ranking') }}" class="dropdown-item">&gt; LEADERBOARD</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item" style="width:100%;text-align:left;">
+                        &gt; CERRAR SESIÓN
+                    </button>
+                </form>
             </div>
-            @endauth
         </div>
     </nav>
 

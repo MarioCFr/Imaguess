@@ -47,10 +47,11 @@
         }
         @keyframes scanline { 0% { top:-4px; } 100% { top:100vh; } }
 
-        /* Navbar */
+                /* Navbar */
         .navbar {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 150;
             border-bottom: 1px solid rgba(0,255,65,0.2);
+            box-shadow: 0 0 20px rgba(0,255,65,0.06), inset 0 0 20px rgba(0,255,65,0.01);
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(4px);
             padding: 12px 32px;
@@ -73,7 +74,6 @@
             box-shadow: 0 0 6px var(--green);
             animation: pulse 2s ease-in-out infinite;
         }
-        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
         .profile-btn {
             width: 38px; height: 38px;
             border: 1px solid var(--green-dim);
@@ -107,6 +107,10 @@
             border-bottom: 1px solid rgba(0,255,65,0.1);
             display: block; text-decoration: none;
             letter-spacing: 1px;
+            background: transparent;
+            border-left: none; border-right: none; border-top: none;
+            width: 100%; text-align: left;
+            font-family: 'Share Tech Mono', monospace;
         }
         .dropdown-item:last-child { border-bottom: none; }
         .dropdown-item:hover { color: var(--green); background: rgba(0,255,65,0.05); }
@@ -188,14 +192,14 @@
     <div class="scanline-move"></div>
     <canvas id="matrix-canvas"></canvas>
 
-    <!-- Navbar -->
-    <nav class="navbar" style="position:fixed;top:0;left:0;right:0;z-index:50;">
+        <!-- Navbar -->
+    <nav class="navbar">
         <div class="nav-logo flicker">IMAGUESS</div>
         <div class="nav-status">
             <div class="status-dot"></div>
             <span>SISTEMA ACTIVO</span>
             <span style="color:#1a5c29;">|</span>
-            <span>SESIÓN: <span style="color:var(--green);">{{ auth()->user()->name ?? 'USUARIO' }}</span></span>
+            <span>SESIÓN: <span style="color:var(--green);">{{ auth()->user()->name ?? 'INVITADO' }}</span></span>
         </div>
         <div style="position:relative;">
             <button class="profile-btn" onclick="toggleDropdown()" title="Perfil">
@@ -207,6 +211,7 @@
                 <div style="padding:10px 16px; font-size:0.65rem; color:#1a5c29; letter-spacing:2px; border-bottom:1px solid rgba(0,255,65,0.15);">
                     ROOT@IMAGUESS<span class="blink">_</span>
                 </div>
+                <a href="{{ route('dashboard') }}" class="dropdown-item">&gt; DASHBOARD</a>
                 <a href="{{ route('profile') }}" class="dropdown-item">&gt; MI PERFIL</a>
                 <a href="{{ route('ranking') }}" class="dropdown-item">&gt; LEADERBOARD</a>
                 <form method="POST" action="{{ route('logout') }}">
