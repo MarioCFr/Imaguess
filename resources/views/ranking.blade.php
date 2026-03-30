@@ -202,10 +202,32 @@
     <nav class="navbar">
         <div class="nav-logo flicker">IMAGUESS</div>
         <div style="display:flex;gap:8px;align-items:center;">
-            <a href="{{ route('dashboard') }}" class="nav-link">&lt; DASHBOARD</a>
-            <a href="{{ route('game') }}" class="nav-link">▶ JUGAR</a>
             @auth
-            <a href="{{ route('profile') }}" class="nav-link">PERFIL</a>
+            <div style="position:relative;">
+                <button onclick="toggleDropdown()" style="width:38px;height:38px;border:1px solid var(--green-dim);border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;transition:all 0.2s;"
+                        onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--green-dim)'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00b32c" stroke-width="1.5">
+                        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                    </svg>
+                </button>
+                <div id="dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:rgba(0,10,2,0.97);border:1px solid var(--green-dim);min-width:180px;z-index:200;">
+                    <div style="padding:10px 16px;font-size:0.65rem;color:#1a5c29;letter-spacing:2px;border-bottom:1px solid rgba(0,255,65,0.15);">
+                        ROOT@IMAGUESS<span style="animation:blink 1s step-end infinite;display:inline-block;">_</span>
+                    </div>
+                    <a href="{{ route('profile') }}" style="padding:10px 16px;font-size:0.75rem;color:var(--green-dim);display:block;text-decoration:none;letter-spacing:1px;border-bottom:1px solid rgba(0,255,65,0.1);transition:all 0.15s;"
+                       onmouseover="this.style.color='var(--green)';this.style.background='rgba(0,255,65,0.05)'"
+                       onmouseout="this.style.color='var(--green-dim)';this.style.background='transparent'">&gt; MI PERFIL</a>
+                    <a href="{{ route('dashboard') }}" style="padding:10px 16px;font-size:0.75rem;color:var(--green-dim);display:block;text-decoration:none;letter-spacing:1px;border-bottom:1px solid rgba(0,255,65,0.1);transition:all 0.15s;"
+                       onmouseover="this.style.color='var(--green)';this.style.background='rgba(0,255,65,0.05)'"
+                       onmouseout="this.style.color='var(--green-dim)';this.style.background='transparent'">&gt; DASHBOARD</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" style="width:100%;text-align:left;padding:10px 16px;font-size:0.75rem;color:var(--green-dim);background:transparent;border:none;cursor:pointer;letter-spacing:1px;font-family:'Share Tech Mono',monospace;transition:all 0.15s;"
+                                onmouseover="this.style.color='var(--green)';this.style.background='rgba(0,255,65,0.05)'"
+                                onmouseout="this.style.color='var(--green-dim)';this.style.background='transparent'">&gt; CERRAR SESIÓN</button>
+                    </form>
+                </div>
+            </div>
             @endauth
         </div>
     </nav>
@@ -333,12 +355,19 @@
         @endauth
 
         <!-- CTA -->
-        <div style="text-align:center;margin-top:32px;">
+        <div style="text-align:center;margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
             <a href="{{ route('game') }}" style="text-decoration:none;">
                 <button style="background:transparent;border:1px solid var(--green);color:var(--green);font-family:'Share Tech Mono',monospace;font-size:0.85rem;padding:12px 36px;cursor:pointer;letter-spacing:3px;transition:all 0.2s;"
                         onmouseover="this.style.background='var(--green)';this.style.color='#000'"
                         onmouseout="this.style.background='transparent';this.style.color='var(--green)'">
                     ▶ JUGAR AHORA
+                </button>
+            </a>
+            <a href="{{ route('dashboard') }}" style="text-decoration:none;">
+                <button style="background:transparent;border:1px solid var(--green);color:var(--green);font-family:'Share Tech Mono',monospace;font-size:0.85rem;padding:12px 36px;cursor:pointer;letter-spacing:3px;transition:all 0.2s;"
+                        onmouseover="this.style.background='var(--green)';this.style.color='#000'"
+                        onmouseout="this.style.background='transparent';this.style.color='var(--green)'">
+                    ⌂ DASHBOARD
                 </button>
             </a>
         </div>
@@ -366,6 +395,17 @@
             });
         }
         setInterval(drawMatrix, 50);
+
+        function toggleDropdown() {
+            const d = document.getElementById('dropdown');
+            d.style.display = d.style.display === 'none' ? 'block' : 'none';
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('[onclick="toggleDropdown()"]') && !e.target.closest('#dropdown')) {
+                const d = document.getElementById('dropdown');
+                if (d) d.style.display = 'none';
+            }
+        });
 
         // Tab switching (visual only for now)
         document.querySelectorAll('.tab-btn').forEach(btn => {

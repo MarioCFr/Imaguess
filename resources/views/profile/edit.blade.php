@@ -263,6 +263,14 @@
             <a href="{{ route('dashboard') }}" class="nav-link">&lt; DASHBOARD</a>
             <a href="{{ route('game') }}" class="nav-link">▶ JUGAR</a>
             <a href="{{ route('ranking') }}" class="nav-link">LEADERBOARD</a>
+            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                @csrf
+                <button type="submit" style="background:transparent;border:1px solid rgba(255,0,64,0.4);color:rgba(255,0,64,0.6);font-family:'Share Tech Mono',monospace;font-size:0.75rem;padding:4px 12px;cursor:pointer;letter-spacing:2px;transition:all 0.2s;"
+                        onmouseover="this.style.borderColor='#ff0040';this.style.color='#ff0040'"
+                        onmouseout="this.style.borderColor='rgba(255,0,64,0.4)';this.style.color='rgba(255,0,64,0.6)'">
+                    ⏻ SALIR
+                </button>
+            </form>
         </div>
     </nav>
 

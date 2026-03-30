@@ -35,9 +35,13 @@ Route::get('/ranking', function () {
 })->name('ranking');
 
 // Perfil
-Route::get('/profile', function () {
-    return view('profile.edit');
-})->middleware(['auth'])->name('profile');
+use App\Http\Controllers\ProfileController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 // Rutas del juego (API)
 Route::middleware(['auth'])->group(function () {
