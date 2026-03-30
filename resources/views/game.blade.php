@@ -222,8 +222,30 @@
             display:flex; align-items:center; justify-content:center;
             flex-direction: column;
             display: none;
+            overflow-y: auto;
+            padding: 32px 16px;
         }
         .gameover-overlay.show { display:flex; }
+        .history-log {
+            width: 100%; max-width: 480px;
+            border: 1px solid rgba(0,255,65,0.2);
+            margin-bottom: 32px;
+        }
+        .history-row {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            align-items: center;
+            padding: 8px 14px;
+            border-bottom: 1px solid rgba(0,255,65,0.07);
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+        }
+        .history-row:last-child { border-bottom: none; }
+        .history-row.guessed { color: var(--green-dim); }
+        .history-row.failed  { color: #ff0040; opacity: 0.8; }
+        .history-num { font-family:'VT323',monospace; font-size:1.4rem; }
+        .history-tag { color: var(--green); }
+        .history-status { font-size:0.65rem; letter-spacing:2px; }
     </style>
 </head>
 <body>
@@ -259,7 +281,12 @@
     <div class="gameover-overlay" id="gameover-overlay">
         <div style="font-family:'VT323',monospace;font-size:1rem;color:var(--green-dim);letter-spacing:4px;margin-bottom:8px;">TIEMPO AGOTADO</div>
         <div style="font-family:'VT323',monospace;font-size:6rem;color:var(--green);text-shadow:0 0 30px var(--green);line-height:1;" id="final-score">0</div>
-        <div style="font-family:'VT323',monospace;font-size:1.5rem;color:var(--green-dim);letter-spacing:4px;margin-bottom:40px;">PUNTOS</div>
+        <div style="font-family:'VT323',monospace;font-size:1.5rem;color:var(--green-dim);letter-spacing:4px;margin-bottom:24px;">PUNTOS</div>
+
+        <!-- Historial de imágenes -->
+        <div style="width:100%;max-width:480px;margin-bottom:8px;font-size:0.6rem;color:var(--green-dim);letter-spacing:3px;">&gt; RESUMEN_PARTIDA.LOG</div>
+        <div class="history-log" id="history-log"></div>
+
         <div style="display:flex;gap:16px;">
             <a href="{{ route('game') }}" style="text-decoration:none;">
                 <button style="background:transparent;border:1px solid var(--green);color:var(--green);font-family:'Share Tech Mono',monospace;font-size:0.85rem;padding:12px 28px;cursor:pointer;letter-spacing:2px;transition:all 0.2s;"
@@ -337,6 +364,7 @@
         let currentAnswers = [];
         let gameActive = true;
         let imagesGuessed = 0;
+        let imageHistory = []; // {num, tag, guessed, pts}
 
         const timerDisplay = document.getElementById('timer-display');
         const timerBar     = document.getElementById('timer-bar');
@@ -403,6 +431,7 @@
                 score += pts;
                 imagesGuessed++;
                 scoreDisplay.textContent = score;
+                imageHistory.push({ num: imgCount, tag: currentAnswers[0], guessed: true, pts: pts });
                 showFeedback(true, '+' + pts);
                 imgCount++;
                 document.getElementById('img-count').textContent = imgCount;
@@ -475,9 +504,34 @@
             renderWord();
         }
 
+        function renderHistory() {
+            const log = document.getElementById('history-log');
+            if (!imageHistory.length) {
+                log.innerHTML = '<div class="history-row"><span style="color:#1a5c29;font-size:0.7rem;letter-spacing:2px;grid-column:1/-1;">SIN IM\u00c1GENES COMPLETADAS</span></div>';
+                return;
+            }
+            let html = '';
+            imageHistory.forEach(function(item) {
+                const statusIcon = item.guessed ? '&#10003;' : '&#10007;';
+                const rowClass   = item.guessed ? 'guessed' : 'failed';
+                const pts        = item.guessed ? '+' + item.pts + ' pts' : 'fallada';
+                html += '<div class="history-row ' + rowClass + '">'
+                      + '<span class="history-num">#' + item.num + '</span>'
+                      + '<span class="history-tag">' + item.tag.toUpperCase() + '</span>'
+                      + '<span class="history-status">' + statusIcon + ' ' + pts + '</span>'
+                      + '</div>';
+            });
+            log.innerHTML = html;
+        }
+
         function endGame() {
             gameActive = false;
+            // Añadir la imagen actual como fallada si no fue adivinada
+            if (currentAnswers.length > 0) {
+                imageHistory.push({ num: imgCount, tag: currentAnswers[0], guessed: false, pts: 0 });
+            }
             document.getElementById('final-score').textContent = score;
+            renderHistory();
             document.getElementById('gameover-overlay').classList.add('show');
 
             @auth
