@@ -88,15 +88,23 @@
             box-shadow: 0 0 12px var(--green-glow);
         }
         .profile-dropdown {
-            position: absolute; top: calc(100% + 8px); right: 0;
+            position: absolute; top: 100%; right: 0;
             background: rgba(0,10,2,0.97);
             border: 1px solid var(--green-dim);
             box-shadow: 0 0 20px var(--green-glow);
             min-width: 180px;
-            display: none;
+            display: block;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+            padding-top: 8px;
             z-index: 200;
         }
-        .profile-dropdown.open { display: block; }
+        .profile-dropdown.open,
+        .dropdown-wrap:hover .profile-dropdown {
+            opacity: 1;
+            pointer-events: all;
+        }
         .dropdown-item {
             padding: 10px 16px;
             font-size: 0.75rem;
@@ -328,7 +336,7 @@
             <span style="color:#1a5c29;">|</span>
             <span>SESIÓN: <span style="color:var(--green);">{{ auth()->user()->name ?? 'INVITADO' }}</span></span>
         </div>
-        <div style="position:relative;">
+        <div class="dropdown-wrap" style="position:relative;">
             <button class="profile-btn" onclick="toggleDropdown()" title="Perfil">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00b32c" stroke-width="1.5">
                     <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
@@ -339,7 +347,7 @@
                     ROOT@IMAGUESS<span class="blink">_</span>
                 </div>
                 <a href="{{ route('dashboard') }}" class="dropdown-item">&gt; DASHBOARD</a>
-                <a href="{{ route('profile') }}" class="dropdown-item">&gt; MI PERFIL</a>
+
                 <a href="{{ route('ranking') }}" class="dropdown-item">&gt; LEADERBOARD</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -656,7 +664,6 @@
         }
         setInterval(drawMatrix, 50);
 
-        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
     </script>
     <style>
         @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
