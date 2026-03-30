@@ -382,12 +382,9 @@
                     img.src = data.image_url;
                     img.classList.remove('img-loading');
                     document.getElementById('img-id').textContent = 'IMG:' + String(imgCount).padStart(3, '0');
-                    img.dataset.hint1 = data.hint1;
-                    img.dataset.hint2 = data.hint2;
                     hintsUsed = 0;
-                    activeHint1 = null;
-                    activeHint2 = null;
-                    renderHints();
+                    revealedLetters = {};
+                    renderWord();
                 })
                 .catch(() => {
                     document.getElementById('hint-display').textContent = '> ERROR DE CONEXIÓN';
@@ -427,18 +424,24 @@
             setTimeout(() => overlay.classList.remove('show'), 700);
         }
 
-        let activeHint1 = null;
-        let activeHint2 = null;
+        let revealedLetters = {};
 
-        function renderHints() {
+        function renderWord() {
+            const word = currentAnswers[0] || '';
             const hintDisplay = document.getElementById('hint-display');
-            let html = '';
-            if (activeHint1) html += '&gt; PISTA 1: <span style="color:var(--green);letter-spacing:4px;">' + activeHint1 + '</span>';
-            if (activeHint2) {
-                if (html) html += '<br>';
-                html += '&gt; PISTA 2: <span style="color:var(--green);">' + activeHint2 + '</span>';
+            if (!word) {
+                hintDisplay.innerHTML = '&gt; ANALIZANDO<span style="animation:blink 1s step-end infinite;display:inline-block;">_</span>';
+                return;
             }
-            if (!html) html = '&gt; ESPERANDO ENTRADA<span style="animation:blink 1s step-end infinite;display:inline-block;">_</span>';
+            let html = '<span style="letter-spacing:8px;font-size:1.3rem;">';
+            for (let i = 0; i < word.length; i++) {
+                if (revealedLetters[i]) {
+                    html += '<span style="color:var(--green);">' + word[i].toUpperCase() + '</span> ';
+                } else {
+                    html += '<span style="color:var(--green-dim);">_</span> ';
+                }
+            }
+            html += '</span>';
             hintDisplay.innerHTML = html;
         }
 
@@ -446,23 +449,30 @@
             if (hintsUsed >= 2 || currentAnswers.length === 0) return;
             hintsUsed++;
             document.getElementById('hints-used').textContent = hintsUsed;
-            const img = document.getElementById('game-image');
+
+            const word = currentAnswers[0] || '';
+            // Índices aún no revelados (excluir primero y último para no hacerlo trivial)
+            const hidden = [];
+            for (let i = 1; i < word.length - 1; i++) {
+                if (!revealedLetters[i]) hidden.push(i);
+            }
+            // Si no hay letras del medio, revelar cualquier índice no revelado
+            if (hidden.length === 0) {
+                for (let i = 0; i < word.length; i++) {
+                    if (!revealedLetters[i]) hidden.push(i);
+                }
+            }
+            if (hidden.length > 0) {
+                const idx = hidden[Math.floor(Math.random() * hidden.length)];
+                revealedLetters[idx] = true;
+            }
 
             if (hintNum === 1) {
-                const word = currentAnswers[0] || '';
-                let hint;
-                if (word.length <= 2) {
-                    hint = word[0].toUpperCase() + ' _';
-                } else {
-                    hint = word[0].toUpperCase() + ' ' + '_ '.repeat(word.length - 2) + word[word.length - 1].toUpperCase();
-                }
-                activeHint1 = hint;
                 document.getElementById('hint1-btn').disabled = true;
             } else {
-                activeHint2 = img.dataset.hint2 || 'SIN PISTA';
                 document.getElementById('hint2-btn').disabled = true;
             }
-            renderHints();
+            renderWord();
         }
 
         function endGame() {
