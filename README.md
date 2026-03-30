@@ -1,59 +1,124 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# IMAGUESS 🟩
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Juego web de adivinanza de imágenes potenciado por inteligencia artificial.  
+El jugador ve una imagen aleatoria obtenida de **Pexels** y tiene que adivinar la etiqueta que la IA de **Azure Computer Vision** le ha asignado. Tienes 60 segundos y dos pistas disponibles.
 
-## About Laravel
+> Proyecto de Fin de Grado — Desarrollo de Aplicaciones Web  
+> Autor: Mario Cordero Freire | Tutor: Antonio Jesús Carmona Lara
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tecnologías
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Laravel 12** + PHP 8.2
+- **MySQL 8** (via XAMPP)
+- **Tailwind CSS v3** + Blade
+- **Pexels API** — imágenes aleatorias
+- **Azure Computer Vision** — etiquetado con IA
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Requisitos previos
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Antes de instalar el proyecto necesitas tener en tu sistema:
 
-## Laravel Sponsors
+- [PHP 8.2+](https://www.php.net/)
+- [Composer](https://getcomposer.org/)
+- [Node.js y npm](https://nodejs.org/)
+- [XAMPP](https://www.apachefriends.org/) (o cualquier servidor MySQL)
+- Git
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Instalación
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1. Clonar el repositorio
 
-## Contributing
+```bash
+git clone https://github.com/tu-usuario/imaguess.git
+cd imaguess
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Instalar dependencias PHP
 
-## Code of Conduct
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3. Instalar dependencias JavaScript
 
-## Security Vulnerabilities
+```bash
+npm install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Configurar el archivo de entorno
 
-## License
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Abre el archivo `.env` y edita estos valores con tus datos:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=imaguess
+DB_USERNAME=root
+DB_PASSWORD=
+
+PEXELS_API_KEY=tu_clave_aqui
+AZURE_VISION_KEY=tu_clave_aqui
+AZURE_VISION_ENDPOINT=tu_endpoint_aqui
+```
+
+### 5. Crear la base de datos
+
+Abre XAMPP, arranca MySQL y crea una base de datos llamada `imaguess` desde phpMyAdmin (`http://localhost/phpmyadmin`).
+
+### 6. Ejecutar las migraciones
+
+```bash
+php artisan migrate
+```
+
+### 7. Arrancar el proyecto
+
+Necesitas dos terminales abiertas a la vez:
+
+**Terminal 1 — servidor Laravel:**
+
+```bash
+php artisan serve
+```
+
+**Terminal 2 — compilador de assets:**
+
+```bash
+npm run dev
+```
+
+Abre el navegador en **http://localhost:8000**
+
+---
+
+## Obtener las claves de API
+
+### Pexels
+
+1. Crea una cuenta en [pexels.com](https://www.pexels.com/api/)
+2. Ve a tu perfil → API
+3. Copia tu clave y pégala en `PEXELS_API_KEY` del `.env`
+
+### Azure Computer Vision
+
+1. Necesitas una cuenta en [Azure](https://azure.microsoft.com/)
+2. Crea un recurso de tipo **Computer Vision** en el portal
+3. Copia la clave y el endpoint y pégalos en el `.env`
+
+---
+
+## Licencia
+
+Proyecto académico — TFG DAW 2025/2026. No destinado a uso comercial.

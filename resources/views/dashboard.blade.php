@@ -209,7 +209,7 @@
                 </div>
                 <a href="{{ route('profile') }}" class="dropdown-item">&gt; MI PERFIL</a>
                 <a href="{{ route('ranking') }}" class="dropdown-item">&gt; LEADERBOARD</a>
-                <a href="{{ route('settings') }}" class="dropdown-item">&gt; CONFIGURACIÓN</a>
+                <a href="{{ route('profile') }}" class="dropdown-item">&gt; CONFIGURACIÓN</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="dropdown-item" style="width:100%;text-align:left;">
