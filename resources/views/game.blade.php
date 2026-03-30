@@ -330,19 +330,22 @@
     </div>
 
     <script>
-        // Game state
         let score = 0;
         let timeLeft = 60;
         let imgCount = 1;
         let hintsUsed = 0;
-        let correctAnswer = 'tranquilidad'; // This will come from the backend
+        let currentAnswers = [];
         let gameActive = true;
+        let imagesGuessed = 0;
 
-        // Timer
         const timerDisplay = document.getElementById('timer-display');
-        const timerBar = document.getElementById('timer-bar');
+        const timerBar     = document.getElementById('timer-bar');
         const scoreDisplay = document.getElementById('score-display');
 
+        // Cargar primera imagen al arrancar
+        loadNextImage();
+
+        // Timer
         const timer = setInterval(() => {
             if (!gameActive) return;
             timeLeft--;
@@ -358,21 +361,55 @@
             }
         }, 1000);
 
-        // Submit answer
-        function submitAnswer() {
-            const input = document.getElementById('answer-input');
-            const answer = input.value.trim().toLowerCase();
-            if (!answer || !gameActive) return;
+        function loadNextImage() {
+            const img = document.getElementById('game-image');
+            img.classList.add('img-loading');
+            document.getElementById('hint1-btn').disabled = false;
+            document.getElementById('hint2-btn').disabled = false;
+            document.getElementById('hints-used').textContent = '0';
+            document.getElementById('answer-input').value = '';
+            document.getElementById('hint-display').innerHTML =
+                '&gt; ANALIZANDO IMAGEN<span style="animation:blink 1s step-end infinite;display:inline-block;">_</span>';
 
-            if (answer === correctAnswer.toLowerCase()) {
-                // Correct
+            fetch('/game/next-image')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('hint-display').textContent = '> ERROR AL CARGAR IMAGEN';
+                        return;
+                    }
+                    currentAnswers = data.answers.map(a => a.toLowerCase());
+                    img.src = data.image_url;
+                    img.classList.remove('img-loading');
+                    document.getElementById('img-id').textContent = 'IMG:' + String(imgCount).padStart(3, '0');
+                    document.getElementById('hint-display').innerHTML =
+                        '&gt; ESPERANDO ENTRADA<span style="animation:blink 1s step-end infinite;display:inline-block;">_</span>';
+                    img.dataset.hint1 = data.hint1;
+                    img.dataset.hint2 = data.hint2;
+                    hintsUsed = 0;
+                })
+                .catch(() => {
+                    document.getElementById('hint-display').textContent = '> ERROR DE CONEXIÓN';
+                });
+        }
+
+        function submitAnswer() {
+            const input  = document.getElementById('answer-input');
+            const answer = input.value.trim().toLowerCase();
+            if (!answer || !gameActive || currentAnswers.length === 0) return;
+
+            const correct = currentAnswers.some(a => a.includes(answer) || answer.includes(a));
+
+            if (correct) {
                 const pts = hintsUsed === 0 ? 100 : hintsUsed === 1 ? 60 : 30;
                 score += pts;
+                imagesGuessed++;
                 scoreDisplay.textContent = score;
                 showFeedback(true, '+' + pts);
+                imgCount++;
+                document.getElementById('img-count').textContent = imgCount;
                 setTimeout(loadNextImage, 900);
             } else {
-                // Wrong
                 showFeedback(false, 'ERROR');
                 input.value = '';
                 input.style.borderColor = 'var(--red)';
@@ -381,51 +418,28 @@
         }
 
         function showFeedback(correct, text) {
-            const overlay = document.getElementById('feedback-overlay');
+            const overlay      = document.getElementById('feedback-overlay');
             const feedbackText = document.getElementById('feedback-text');
             feedbackText.textContent = text;
-            feedbackText.className = 'feedback-text ' + (correct ? 'feedback-correct' : 'feedback-wrong');
+            feedbackText.className   = 'feedback-text ' + (correct ? 'feedback-correct' : 'feedback-wrong');
             overlay.classList.add('show');
             setTimeout(() => overlay.classList.remove('show'), 700);
         }
 
-        function loadNextImage() {
-            imgCount++;
-            document.getElementById('img-count').textContent = imgCount;
-            hintsUsed = 0;
-            document.getElementById('hints-used').textContent = '0';
-            document.getElementById('hint1-btn').disabled = false;
-            document.getElementById('hint2-btn').disabled = false;
-            document.getElementById('answer-input').value = '';
-            document.getElementById('hint-display').innerHTML = '&gt; ESPERANDO ENTRADA<span style="animation:blink 1s step-end infinite;display:inline-block;">_</span>';
-
-            const img = document.getElementById('game-image');
-            img.classList.add('img-loading');
-
-            // In production this will be an AJAX call to GameController
-            // fetch('/game/next-image').then(r => r.json()).then(data => { ... })
-            setTimeout(() => {
-                img.src = 'https://images.pexels.com/photos/' + (Math.floor(Math.random()*1000000)+100000) + '/pexels-photo.jpeg?auto=compress&cs=tinysrgb&w=600';
-                img.classList.remove('img-loading');
-                document.getElementById('img-id').textContent = 'IMG:' + String(imgCount).padStart(3,'0');
-            }, 400);
-        }
-
         function useHint(hintNum) {
-            if (hintsUsed >= 2) return;
+            if (hintsUsed >= 2 || currentAnswers.length === 0) return;
             hintsUsed++;
             document.getElementById('hints-used').textContent = hintsUsed;
+            const img         = document.getElementById('game-image');
             const hintDisplay = document.getElementById('hint-display');
 
             if (hintNum === 1) {
-                // Show first and last letter
-                const word = correctAnswer;
-                let hint = word[0] + ' ' + '_ '.repeat(word.length - 2) + word[word.length - 1];
-                hintDisplay.innerHTML = '&gt; PISTA 1: <span style="color:var(--green);letter-spacing:6px;">' + hint.toUpperCase() + '</span>';
+                hintDisplay.innerHTML = '&gt; PISTA 1: <span style="color:var(--green);letter-spacing:6px;">'
+                    + (img.dataset.hint1 || '_ _ _').toUpperCase() + '</span>';
                 document.getElementById('hint1-btn').disabled = true;
             } else {
-                // Semantic category (comes from backend)
-                hintDisplay.innerHTML = '&gt; PISTA 2: <span style="color:var(--green);">ES UN CONCEPTO ABSTRACTO / EMOCIÓN</span>';
+                hintDisplay.innerHTML = '&gt; PISTA 2: <span style="color:var(--green);">'
+                    + (img.dataset.hint2 || 'SIN PISTA') + '</span>';
                 document.getElementById('hint2-btn').disabled = true;
             }
         }
@@ -434,30 +448,41 @@
             gameActive = false;
             document.getElementById('final-score').textContent = score;
             document.getElementById('gameover-overlay').classList.add('show');
-            // In production: POST to ScoreController
-            // fetch('/game/save-score', { method:'POST', body: JSON.stringify({points: score}) })
+
+            @auth
+            fetch('/game/save-score', {
+                method:  'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ points: score, images_guessed: imagesGuessed })
+            });
+            @endauth
         }
 
-        // Enter key
-        document.getElementById('answer-input').addEventListener('keydown', (e) => {
+        document.getElementById('answer-input').addEventListener('keydown', e => {
             if (e.key === 'Enter') submitAnswer();
         });
 
-        // Matrix rain background
+        // Matrix rain
         const canvas = document.createElement('canvas');
         canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.04;z-index:0;pointer-events:none;';
         document.body.prepend(canvas);
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const cols = Math.floor(canvas.width / 16);
+        const ctx    = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const cols  = Math.floor(canvas.width / 16);
         const drops = Array(cols).fill(1);
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%アイウエオ';
         setInterval(() => {
-            ctx.fillStyle='rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle='#00ff41'; ctx.font='14px monospace';
-            drops.forEach((y,i) => {
-                ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*16,y*16);
-                if(y*16>canvas.height && Math.random()>0.975) drops[i]=0;
+            ctx.fillStyle = 'rgba(0,0,0,0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00ff41';
+            ctx.font = '14px monospace';
+            drops.forEach((y, i) => {
+                ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 16, y * 16);
+                if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             });
         }, 50);

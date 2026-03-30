@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GameController;
 
 // Página de inicio → redirige a login
 Route::get('/', function () {
@@ -37,6 +38,12 @@ Route::get('/ranking', function () {
 Route::get('/profile', function () {
     return view('profile.edit');
 })->middleware(['auth'])->name('profile');
+
+// Rutas del juego (API)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/game/next-image', [GameController::class, 'nextImage']);
+    Route::post('/game/save-score', [GameController::class, 'saveScore']);
+});
 
 // Rutas de autenticación de Breeze
 require __DIR__.'/auth.php';
