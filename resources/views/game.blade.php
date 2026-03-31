@@ -6,43 +6,10 @@
     <title>IMAGUESS // PARTIDA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/matrix.css') }}">
     <style>
-        :root {
-            --green: #00ff41;
-            --green-dim: #00b32c;
-            --green-dark: #003b0f;
-            --green-glow: rgba(0,255,65,0.15);
-            --red: #ff0040;
-            --bg: #0a0a0a;
-        }
-        * { box-sizing: border-box; }
-        body {
-            background: var(--bg);
-            font-family: 'Share Tech Mono', monospace;
-            color: var(--green);
-            min-height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
-            pointer-events: none; z-index: 100;
-        }
-        body::after {
-            content: '';
-            position: fixed; inset: 0;
-            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%);
-            pointer-events: none; z-index: 99;
-        }
-        .scanline-move {
-            position: fixed; width:100%; height:3px;
-            background: linear-gradient(transparent, rgba(0,255,65,0.06), transparent);
-            animation: scanline 7s linear infinite;
-            pointer-events: none; z-index: 101;
-        }
-        @keyframes scanline { 0%{top:-4px;} 100%{top:100vh;} }
+        /* --- body override: el juego necesita overflow:hidden --- */
+        body { overflow: hidden; }
 
         /* HUD Top bar */
         .hud-bar {
@@ -144,7 +111,7 @@
             caret-color: var(--green);
         }
         .answer-input:focus { border-color: var(--green); box-shadow: 0 0 16px var(--green-glow); }
-        .answer-input::placeholder { color: #1a5c29; }
+        .answer-input::placeholder { color: var(--green-faint); }
 
         .submit-btn {
             background: transparent;
@@ -250,6 +217,7 @@
 </head>
 <body>
     <div class="scanline-move"></div>
+    <canvas id="matrix-canvas"></canvas>
 
     <!-- HUD -->
     <div class="hud-bar">
@@ -264,7 +232,7 @@
         </div>
         <div style="font-size:0.7rem;color:var(--green-dim);text-align:right;">
             <div class="img-counter">IMAGEN <span id="img-count">1</span></div>
-            <div style="font-size:0.6rem;color:#1a5c29;margin-top:2px;">{{ auth()->user()->name ?? 'INVITADO' }}</div>
+            <div style="font-size:0.6rem;color:var(--green-faint);margin-top:2px;">{{ auth()->user()->name ?? 'INVITADO' }}</div>
         </div>
     </div>
     <!-- Timer bar -->
@@ -350,7 +318,7 @@
                     💡 PISTA 2 (categoría)
                 </button>
             </div>
-            <div style="font-size:0.65rem;color:#1a5c29;letter-spacing:1px;">
+            <div style="font-size:0.65rem;color:var(--green-faint);letter-spacing:1px;">
                 PISTAS USADAS: <span id="hints-used" style="color:var(--green-dim);">0</span>/2
             </div>
         </div>
@@ -507,7 +475,7 @@
         function renderHistory() {
             const log = document.getElementById('history-log');
             if (!imageHistory.length) {
-                log.innerHTML = '<div class="history-row"><span style="color:#1a5c29;font-size:0.7rem;letter-spacing:2px;grid-column:1/-1;">SIN IM\u00c1GENES COMPLETADAS</span></div>';
+                log.innerHTML = '<div class="history-row"><span style="color:var(--green-faint);font-size:0.7rem;letter-spacing:2px;grid-column:1/-1;">SIN IM\u00c1GENES COMPLETADAS</span></div>';
                 return;
             }
             let html = '';
@@ -550,27 +518,7 @@
             if (e.key === 'Enter') submitAnswer();
         });
 
-        // Matrix rain
-        const canvas = document.createElement('canvas');
-        canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.04;z-index:0;pointer-events:none;';
-        document.body.prepend(canvas);
-        const ctx    = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const cols  = Math.floor(canvas.width / 16);
-        const drops = Array(cols).fill(1);
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%アイウエオ';
-        setInterval(() => {
-            ctx.fillStyle = 'rgba(0,0,0,0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00ff41';
-            ctx.font = '14px monospace';
-            drops.forEach((y, i) => {
-                ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 16, y * 16);
-                if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }, 50);
     </script>
+    <script src="{{ asset('js/matrix.js') }}"></script>
 </body>
 </html>
