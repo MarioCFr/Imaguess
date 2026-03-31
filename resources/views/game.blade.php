@@ -176,7 +176,6 @@
         /* Image counter */
         .img-counter { font-size:0.7rem; color:var(--green-dim); letter-spacing:2px; }
 
-        .blink { animation:blink 1s step-end infinite; }
         @keyframes blink { 50%{opacity:0;} }
 
         /* Transition for new image */

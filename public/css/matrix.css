@@ -6,25 +6,27 @@
 
 /* --- Variables de color globales --- */
 :root {
-    --green:      #00ff41;
-    --green-dim:  #00b32c;
+    --green: #00ff41;
+    --green-dim: #00b32c;
     --green-dark: #003b0f;
     --green-glow: rgba(0, 255, 65, 0.15);
-    --green-faint:#1a5c29;
-    --red:        #ff0040;
-    --gold:       #ffd700;
-    --silver:     #c0c0c0;
-    --bronze:     #cd7f32;
-    --bg:         #0a0a0a;
+    --green-faint: #1a5c29;
+    --red: #ff0040;
+    --gold: #ffd700;
+    --silver: #c0c0c0;
+    --bronze: #cd7f32;
+    --bg: #0a0a0a;
 }
 
 /* --- Reset mínimo --- */
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 /* --- Body base --- */
 body {
     background: var(--bg);
-    font-family: 'Share Tech Mono', monospace;
+    font-family: "Share Tech Mono", monospace;
     color: var(--green);
     min-height: 100vh;
     position: relative;
@@ -32,7 +34,7 @@ body {
 
 /* --- Efecto scanlines CRT --- */
 body::before {
-    content: '';
+    content: "";
     position: fixed;
     inset: 0;
     background: repeating-linear-gradient(
@@ -48,10 +50,14 @@ body::before {
 
 /* --- Viñeta oscura en bordes --- */
 body::after {
-    content: '';
+    content: "";
     position: fixed;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.65) 100%);
+    background: radial-gradient(
+        ellipse at center,
+        transparent 55%,
+        rgba(0, 0, 0, 0.65) 100%
+    );
     pointer-events: none;
     z-index: 99;
 }
@@ -59,8 +65,10 @@ body::after {
 /* --- Canvas lluvia Matrix --- */
 #matrix-canvas {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     opacity: 0.05;
     z-index: 0;
 }
@@ -70,20 +78,30 @@ body::after {
     position: fixed;
     width: 100%;
     height: 3px;
-    background: linear-gradient(transparent, rgba(0, 255, 65, 0.06), transparent);
+    background: linear-gradient(
+        transparent,
+        rgba(0, 255, 65, 0.06),
+        transparent
+    );
     animation: scanline 8s linear infinite;
     pointer-events: none;
     z-index: 101;
 }
 @keyframes scanline {
-    0%   { top: -4px; }
-    100% { top: 100vh; }
+    0% {
+        top: -4px;
+    }
+    100% {
+        top: 100vh;
+    }
 }
 
 /* --- Caja terminal con borde verde --- */
 .terminal-box {
     border: 1px solid var(--green-dim);
-    box-shadow: 0 0 20px var(--green-glow), inset 0 0 20px rgba(0, 255, 65, 0.02);
+    box-shadow:
+        0 0 20px var(--green-glow),
+        inset 0 0 20px rgba(0, 255, 65, 0.02);
     background: rgba(0, 10, 2, 0.92);
     position: relative;
 }
@@ -96,21 +114,55 @@ body::after {
     border-color: var(--green);
     border-style: solid;
 }
-.corner-tl { top: -1px; left: -1px;  border-width: 1px 0 0 1px; }
-.corner-tr { top: -1px; right: -1px; border-width: 1px 1px 0 0; }
-.corner-bl { bottom: -1px; left: -1px;  border-width: 0 0 1px 1px; }
-.corner-br { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+.corner-tl {
+    top: -1px;
+    left: -1px;
+    border-width: 1px 0 0 1px;
+}
+.corner-tr {
+    top: -1px;
+    right: -1px;
+    border-width: 1px 1px 0 0;
+}
+.corner-bl {
+    bottom: -1px;
+    left: -1px;
+    border-width: 0 0 1px 1px;
+}
+.corner-br {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 1px 1px 0;
+}
 
 /* --- Animaciones comunes --- */
-.blink { animation: blink 1s step-end infinite; }
-@keyframes blink { 50% { opacity: 0; } }
+.blink {
+    animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
 
-.flicker { animation: flicker 10s infinite; }
+.flicker {
+    animation: flicker 10s infinite;
+}
 @keyframes flicker {
-    0%, 96%, 100% { opacity: 1; }
-    97% { opacity: 0.5; }
-    98% { opacity: 1; }
-    99% { opacity: 0.7; }
+    0%,
+    96%,
+    100% {
+        opacity: 1;
+    }
+    97% {
+        opacity: 0.5;
+    }
+    98% {
+        opacity: 1;
+    }
+    99% {
+        opacity: 0.7;
+    }
 }
 
 /* ============================================================
@@ -118,10 +170,14 @@ body::after {
    ============================================================ */
 .navbar {
     position: fixed;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 150;
     border-bottom: 1px solid rgba(0, 255, 65, 0.2);
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.06), inset 0 0 20px rgba(0, 255, 65, 0.01);
+    box-shadow:
+        0 0 20px rgba(0, 255, 65, 0.06),
+        inset 0 0 20px rgba(0, 255, 65, 0.01);
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(4px);
     padding: 12px 32px;
@@ -141,20 +197,25 @@ body::after {
 }
 
 .nav-logo {
-    font-family: 'VT323', monospace;
+    font-family: "VT323", monospace;
     font-size: 1.8rem;
     color: var(--green);
     text-shadow: 0 0 10px var(--green);
     letter-spacing: 2px;
     text-decoration: none;
     position: relative;
-    transition: letter-spacing 0.3s ease, text-shadow 0.3s ease;
+    width: fit-content;
+    transition:
+        letter-spacing 0.3s ease,
+        text-shadow 0.3s ease;
 }
 
 /* Hover del logo: se expande y brilla más */
 .nav-logo:hover {
     letter-spacing: 5px;
-    text-shadow: 0 0 16px var(--green), 0 0 32px rgba(0, 255, 65, 0.4);
+    text-shadow:
+        0 0 16px var(--green),
+        0 0 32px rgba(0, 255, 65, 0.4);
     color: var(--green);
 }
 
@@ -167,20 +228,27 @@ body::after {
 }
 
 .status-dot {
-    width: 6px; height: 6px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--green);
     box-shadow: 0 0 6px var(--green);
     animation: pulse 2s ease-in-out infinite;
 }
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.4; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
 }
 
 /* --- Botón de perfil (icono) --- */
 .profile-btn {
-    width: 38px; height: 38px;
+    width: 38px;
+    height: 38px;
     border: 1px solid var(--green-dim);
     border-radius: 2px;
     display: flex;
@@ -199,7 +267,8 @@ body::after {
 /* --- Dropdown de perfil --- */
 .profile-dropdown {
     position: absolute;
-    top: 100%; right: 0;
+    top: 100%;
+    right: 0;
     background: rgba(0, 10, 2, 0.97);
     border: 1px solid var(--green-dim);
     box-shadow: 0 0 20px var(--green-glow);
@@ -228,12 +297,16 @@ body::after {
     text-decoration: none;
     letter-spacing: 1px;
     background: transparent;
-    border-left: none; border-right: none; border-top: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
     width: 100%;
     text-align: left;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: "Share Tech Mono", monospace;
 }
-.dropdown-item:last-child { border-bottom: none; }
+.dropdown-item:last-child {
+    border-bottom: none;
+}
 .dropdown-item:hover {
     color: var(--green);
     background: rgba(0, 255, 65, 0.05);
@@ -247,7 +320,7 @@ body::after {
     border: none;
     border-bottom: 1px solid var(--green-dim);
     color: var(--green);
-    font-family: 'Share Tech Mono', monospace;
+    font-family: "Share Tech Mono", monospace;
     font-size: 1rem;
     outline: none;
     width: 100%;
@@ -259,13 +332,15 @@ body::after {
     border-bottom-color: var(--green);
     box-shadow: 0 2px 8px rgba(0, 255, 65, 0.2);
 }
-.terminal-input::placeholder { color: var(--green-faint); }
+.terminal-input::placeholder {
+    color: var(--green-faint);
+}
 
 .btn-primary {
     background: transparent;
     border: 1px solid var(--green);
     color: var(--green);
-    font-family: 'Share Tech Mono', monospace;
+    font-family: "Share Tech Mono", monospace;
     font-size: 1rem;
     padding: 10px 0;
     width: 100%;
@@ -277,7 +352,7 @@ body::after {
     overflow: hidden;
 }
 .btn-primary::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: var(--green);
@@ -289,7 +364,9 @@ body::after {
     color: #000;
     box-shadow: 0 0 20px var(--green-glow);
 }
-.btn-primary:hover::before { transform: translateX(0); }
+.btn-primary:hover::before {
+    transform: translateX(0);
+}
 
 .label-text {
     font-size: 0.7rem;
