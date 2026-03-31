@@ -212,6 +212,51 @@
         .history-num { font-family:'VT323',monospace; font-size:1.4rem; }
         .history-tag { color: var(--green); }
         .history-status { font-size:0.65rem; letter-spacing:2px; }
+
+        /* --- Responsive --- */
+        @media (max-width: 640px) {
+            /* HUD más compacto */
+            .hud-bar {
+                padding: 8px 12px;
+                gap: 8px;
+            }
+            .hud-logo {
+                font-size: 1.2rem;
+            }
+            .hud-score {
+                font-size: 1.4rem;
+            }
+            .hud-timer {
+                font-size: 2rem;
+            }
+            .hud-timer-label {
+                font-size: 0.5rem;
+            }
+            /* Barra de timer ajustada al nuevo alto del HUD */
+            .timer-bar-wrap {
+                top: 48px;
+            }
+            /* Input y botón en columna */
+            .answer-input {
+                font-size: 0.95rem;
+                padding: 10px 12px;
+                letter-spacing: 1px;
+            }
+            .submit-btn {
+                padding: 10px 16px;
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+            }
+            /* Feedback más pequeño */
+            .feedback-text {
+                font-size: 3rem;
+                letter-spacing: 4px;
+            }
+            /* Game over overlay */
+            .gameover-overlay {
+                padding: 20px 12px;
+            }
+        }
     </style>
 </head>
 <body>

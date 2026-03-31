@@ -375,3 +375,34 @@ body::after {
     text-transform: uppercase;
     margin-bottom: 4px;
 }
+
+/* ============================================================
+   RESPONSIVE — Media queries
+   ============================================================ */
+
+/* Tablet (≤ 768px) */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 16px;
+    }
+}
+
+/* Móvil (≤ 640px) */
+@media (max-width: 640px) {
+    /* Navbar: ocultar texto central, solo logo + botón */
+    .navbar {
+        grid-template-columns: auto 1fr;
+        padding: 10px 16px;
+    }
+    .nav-status {
+        display: none;
+    }
+    .dropdown-wrap {
+        justify-self: end;
+    }
+
+    /* Dropdown más ancho en móvil */
+    .profile-dropdown {
+        min-width: 160px;
+    }
+}

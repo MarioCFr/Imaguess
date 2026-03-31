@@ -96,6 +96,43 @@
             color: var(--green);
             background: rgba(0,255,65,0.05);
         }
+
+        /* --- Responsive --- */
+        @media (max-width: 640px) {
+            /* Pódium: columna única en lugar de 3 */
+            .podium-section {
+                grid-template-columns: 1fr;
+            }
+            /* Reordenar pódium: #1 arriba, #2, #3 */
+            .podium-card.p1 { order: 1; }
+            .podium-card.p2 { order: 2; }
+            .podium-card.p3 { order: 3; }
+
+            /* Tabla: ocultar columna PARTIDAS, queda RANK + OPERADOR + PUNTOS */
+            .lb-row {
+                grid-template-columns: 48px 1fr auto;
+            }
+            .lb-row > div:nth-child(3) {
+                display: none;
+            }
+
+            /* Cabecera de tabla igual */
+            .lb-header {
+                grid-template-columns: 48px 1fr auto;
+            }
+
+            /* Título más pequeño */
+            .ranking-title {
+                font-size: 2.2rem;
+            }
+
+            /* Tabs en móvil más pequeños */
+            .tab-btn {
+                font-size: 0.6rem;
+                padding: 6px 10px;
+                letter-spacing: 1px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -135,7 +172,7 @@
 
         <!-- Header -->
         <div style="text-align:center;margin-bottom:40px;padding-top:24px;">
-            <div style="font-family:'VT323',monospace;font-size:3.5rem;color:var(--green);text-shadow:0 0 20px var(--green),0 0 40px rgba(0,255,65,0.2);line-height:1;">
+            <div class="ranking-title" style="font-family:'VT323',monospace;font-size:3.5rem;color:var(--green);text-shadow:0 0 20px var(--green),0 0 40px rgba(0,255,65,0.2);line-height:1;">
                 LEADERBOARD
             </div>
             <div style="font-size:0.7rem;color:var(--green-dim);letter-spacing:4px;margin-top:4px;">
@@ -194,7 +231,7 @@
             <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
             <div class="corner corner-bl"></div><div class="corner corner-br"></div>
 
-            <div style="display:grid;grid-template-columns:60px 1fr auto auto;padding:10px 20px;border-bottom:1px solid rgba(0,255,65,0.2);font-size:0.6rem;color:var(--green-dim);letter-spacing:3px;">
+            <div class="lb-header" style="display:grid;grid-template-columns:60px 1fr auto auto;padding:10px 20px;border-bottom:1px solid rgba(0,255,65,0.2);font-size:0.6rem;color:var(--green-dim);letter-spacing:3px;">
                 <span>RANK</span>
                 <span>OPERADOR</span>
                 <span style="text-align:right;padding-right:20px;">PARTIDAS</span>

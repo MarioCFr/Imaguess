@@ -154,6 +154,35 @@
         .wip-label { font-size:0.55rem; color:#ffbf00; letter-spacing:2px; opacity:0.7; margin-left:8px; }
 
         @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            /* Avatar + info: columna única en tablet */
+            .profile-top-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .avatar-ring {
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 640px) {
+            /* Todos los grids de 2 columnas pasan a 1 */
+            .two-col-grid {
+                grid-template-columns: 1fr !important;
+            }
+            /* Stats en perfil: 3 col se mantiene pero más pequeño */
+            .stat-num { font-size: 1.6rem; }
+            .stat-lbl { font-size: 0.55rem; }
+            /* Titulo más pequeño */
+            .profile-title {
+                font-size: 1.8rem !important;
+            }
+            /* Avatar centrado */
+            .avatar-ring {
+                margin: 0 auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -193,7 +222,7 @@
 
         <div style="padding-top:28px;margin-bottom:32px;">
             <div style="font-size:0.65rem;color:var(--green-dim);letter-spacing:3px;margin-bottom:4px;">&gt; SISTEMA // PERFIL_USUARIO</div>
-            <div style="font-family:'VT323',monospace;font-size:2.5rem;color:var(--green);text-shadow:0 0 12px rgba(0,255,65,0.3);">CONFIGURACIÓN</div>
+            <div class="profile-title" style="font-family:'VT323',monospace;font-size:2.5rem;color:var(--green);text-shadow:0 0 12px rgba(0,255,65,0.3);">CONFIGURACIÓN</div>
         </div>
 
         @if(session('status'))
@@ -201,7 +230,7 @@
         @endif
 
         <!-- Avatar + info -->
-        <div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;margin-bottom:24px;">
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;margin-bottom:24px;" class="profile-top-grid">
             <div class="avatar-ring">
                 <div class="avatar-letter">{{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}</div>
             </div>
@@ -247,7 +276,7 @@
         </div>
 
         <!-- Datos + Contraseña -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+        <div class="two-col-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
             <div class="t-box" style="padding:20px;">
                 <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
                 <div class="corner corner-bl"></div><div class="corner corner-br"></div>
@@ -293,7 +322,7 @@
         </div>
 
         <!-- Preferencias + Historial -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+        <div class="two-col-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
             <div class="t-box wip-box" style="padding:20px;">
                 <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
                 <div class="corner corner-bl"></div><div class="corner corner-br"></div>

@@ -61,6 +61,25 @@
         }
         .log-line .time { color: var(--green-faint); min-width: 80px; }
         .log-line .pts  { color: var(--green); margin-left: auto; }
+
+        /* --- Responsive --- */
+        @media (max-width: 640px) {
+            .play-btn {
+                font-size: 1.8rem;
+                padding: 16px 32px;
+                letter-spacing: 3px;
+            }
+            .stat-box {
+                padding: 12px 8px;
+            }
+            .stat-num {
+                font-size: 1.8rem;
+            }
+            .stat-label {
+                font-size: 0.55rem;
+                letter-spacing: 1px;
+            }
+        }
     </style>
 </head>
 <body>
