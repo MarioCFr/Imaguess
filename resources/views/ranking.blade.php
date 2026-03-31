@@ -104,7 +104,7 @@
 
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="nav-logo flicker">IMAGUESS</div>
+        <a href="{{ route('dashboard') }}" class="nav-logo flicker">IMAGUESS</a>
         <div class="nav-status">
             <div class="status-dot"></div>
             <span>SISTEMA ACTIVO</span>

@@ -125,9 +125,19 @@ body::after {
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(4px);
     padding: 12px 32px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
+}
+
+/* El nav-status queda siempre centrado en la columna del medio */
+.nav-status {
+    justify-self: center;
+}
+
+/* El dropdown-wrap se alinea a la derecha */
+.dropdown-wrap {
+    justify-self: end;
 }
 
 .nav-logo {
@@ -137,6 +147,15 @@ body::after {
     text-shadow: 0 0 10px var(--green);
     letter-spacing: 2px;
     text-decoration: none;
+    position: relative;
+    transition: letter-spacing 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Hover del logo: se expande y brilla más */
+.nav-logo:hover {
+    letter-spacing: 5px;
+    text-shadow: 0 0 16px var(--green), 0 0 32px rgba(0, 255, 65, 0.4);
+    color: var(--green);
 }
 
 .nav-status {

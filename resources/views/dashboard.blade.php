@@ -69,7 +69,7 @@
 
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="nav-logo flicker">IMAGUESS</div>
+        <a href="{{ route('dashboard') }}" class="nav-logo flicker">IMAGUESS</a>
         <div class="nav-status">
             <div class="status-dot"></div>
             <span>SISTEMA ACTIVO</span>
@@ -86,8 +86,8 @@
                 <div style="padding:10px 16px; font-size:0.65rem; color:var(--green-faint); letter-spacing:2px; border-bottom:1px solid rgba(0,255,65,0.15);">
                     ROOT@IMAGUESS<span class="blink">_</span>
                 </div>
-                <a href="{{ route('profile') }}" class="dropdown-item">&gt; MI PERFIL</a>
                 <a href="{{ route('ranking') }}" class="dropdown-item">&gt; LEADERBOARD</a>
+                <a href="{{ route('profile') }}" class="dropdown-item">&gt; MI PERFIL</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="dropdown-item">&gt; CERRAR SESIÓN</button>
