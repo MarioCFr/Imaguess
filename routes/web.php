@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\RankingController;
 
 // Página de inicio → redirige a login
 Route::get('/', function () {
@@ -24,15 +25,7 @@ Route::get('/game/guest', function () {
 })->name('game.guest');
 
 // Ranking (público)
-Route::get('/ranking', function () {
-    $topScores = \App\Models\Score::with('user')
-        ->orderByDesc('points')
-        ->get()
-        ->unique('user_id')
-        ->values();
-
-    return view('ranking', compact('topScores'));
-})->name('ranking');
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking');
 
 // Perfil
 use App\Http\Controllers\ProfileController;
