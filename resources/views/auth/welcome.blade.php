@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+    <meta name="description" content="IMAGUESS — Adivina la etiqueta IA de imágenes aleatorias. Juego de reconocimiento visual con Pexels API y Azure Computer Vision.">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
