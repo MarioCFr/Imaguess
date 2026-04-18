@@ -37,10 +37,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Rutas del juego (API)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/game/next-image', [GameController::class, 'nextImage']);
-    Route::post('/game/save-score', [GameController::class, 'saveScore']);
-});
+Route::get('/game/next-image', [GameController::class, 'nextImage']);           // público (invitados también juegan)
+Route::post('/game/save-score', [GameController::class, 'saveScore'])->middleware(['auth']); // solo usuarios registrados
 
 // Rutas de autenticación de Breeze
 require __DIR__.'/auth.php';

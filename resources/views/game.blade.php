@@ -304,7 +304,7 @@
         <div class="history-log" id="history-log"></div>
 
         <div style="display:flex;gap:16px;">
-            <a href="{{ route('game') }}" style="text-decoration:none;">
+            <a href="{{ auth()->check() ? route('game') : route('game.guest') }}" style="text-decoration:none;">
                 <button style="background:transparent;border:1px solid var(--green);color:var(--green);font-family:'Share Tech Mono',monospace;font-size:0.85rem;padding:12px 28px;cursor:pointer;letter-spacing:2px;transition:all 0.2s;"
                         onmouseover="this.style.background='var(--green)';this.style.color='#000'"
                         onmouseout="this.style.background='transparent';this.style.color='var(--green)'">
