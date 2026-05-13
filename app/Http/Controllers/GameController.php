@@ -12,7 +12,7 @@ class GameController extends Controller
     {
         // 1. Obtener imagen aleatoria de Pexels
         $pexelsResponse = Http::withHeaders([
-            'Authorization' => env('PEXELS_API_KEY'),
+            'Authorization' => config('services.pexels.key'),
         ])->get('https://api.pexels.com/v1/search', [
             'query'    => collect(['nature', 'city', 'animals', 'food', 'travel',
                                    'architecture', 'people', 'technology'])->random(),
@@ -34,9 +34,9 @@ class GameController extends Controller
         $imageId  = $photo['id'];
 
         // 2. Analizar imagen con Azure Computer Vision (API v3.2)
-        $endpoint      = rtrim(env('AZURE_VISION_ENDPOINT'), '/');
+        $endpoint      = rtrim(config('services.azure_vision.endpoint'), '/');
         $azureResponse = Http::withHeaders([
-            'Ocp-Apim-Subscription-Key' => env('AZURE_VISION_KEY'),
+            'Ocp-Apim-Subscription-Key' => config('services.azure_vision.key'),
             'Content-Type'              => 'application/json',
         ])->post("{$endpoint}/vision/v3.2/analyze?visualFeatures=Tags&language=es", [
             'url' => $imageUrl,

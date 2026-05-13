@@ -7,8 +7,7 @@
     <meta name="description" content="Inicia sesión en IMAGUESS para guardar tus puntuaciones y competir en el ranking global de reconocimiento de imágenes.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(["resources/css/app.css"])
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/matrix.css') }}">
     <style>

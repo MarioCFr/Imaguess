@@ -35,7 +35,7 @@ Antes de instalar el proyecto necesitas tener en tu sistema:
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/imaguess.git
+git clone https://github.com/MarioCFr/Imaguess.git
 cd imaguess
 ```
 

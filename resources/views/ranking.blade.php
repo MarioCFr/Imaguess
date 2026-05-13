@@ -7,8 +7,7 @@
     <meta name="description" content="Ranking global de IMAGUESS. Consulta las mejores puntuaciones y compite por el primer puesto en el leaderboard.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(["resources/css/app.css"])
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/matrix.css') }}">
     <style>
@@ -184,11 +183,9 @@
             </div>
         </div>
 
-        <!-- Tabs -->
+        <!-- Filtro -->
         <div style="display:flex;gap:8px;margin-bottom:24px;">
-            <button class="tab-btn active">GLOBAL</button>
-            <button class="tab-btn">ESTA SEMANA</button>
-            <button class="tab-btn">MIS MEJORES</button>
+            <span class="tab-btn active" style="cursor:default;">GLOBAL</span>
         </div>
 
         <!-- Pódium top 3 -->
@@ -256,10 +253,10 @@
                         {{ strtoupper($score->user->name ?? 'ANON') }}
                         @if($isMe) <span style="font-size:0.6rem;color:var(--green-dim);margin-left:6px;">[TÚ]</span> @endif
                     </div>
-                    <div class="player-games">{{ $score->user->scores()->count() ?? 0 }} PARTIDAS</div>
+                    <div class="player-games">{{ $score->user->scores_count ?? 0 }} PARTIDAS</div>
                 </div>
                 <div style="text-align:right;padding-right:20px;font-size:0.7rem;color:var(--green-dim);">
-                    {{ $score->user->scores()->count() ?? 0 }}
+                    {{ $score->user->scores_count ?? 0 }}
                 </div>
                 <div>
                     <div class="player-score">{{ number_format($score->points) }}</div>
@@ -305,14 +302,6 @@
     </div>
 
     <script src="{{ asset('js/matrix.js') }}"></script>
-    <script>
-        /* Tabs (visual, sin lógica backend por ahora) */
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-    </script>
+
 </body>
 </html>

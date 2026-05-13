@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    // Pexels API — imágenes aleatorias
+    'pexels' => [
+        'key' => env('PEXELS_API_KEY'),
+    ],
+
+    // Azure Computer Vision — etiquetado con IA
+    'azure_vision' => [
+        'key'      => env('AZURE_VISION_KEY'),
+        'endpoint' => env('AZURE_VISION_ENDPOINT'),
+    ],
+
 ];

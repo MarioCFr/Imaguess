@@ -7,8 +7,7 @@
     <meta name="description" content="Perfil de usuario de IMAGUESS. Consulta tus estadísticas, historial de partidas y gestiona los datos de tu cuenta.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(["resources/css/app.css"])
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/matrix.css') }}">
     <style>
