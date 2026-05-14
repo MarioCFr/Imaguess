@@ -1,4 +1,4 @@
-# IMAGUESS 🟩
+# IMAGUESS 
 
 Juego web de adivinanza de imágenes potenciado por inteligencia artificial.  
 El jugador ve una imagen aleatoria obtenida de **Pexels** y tiene que adivinar la etiqueta que la IA de **Azure Computer Vision** le ha asignado. Tienes 60 segundos y dos pistas disponibles.
